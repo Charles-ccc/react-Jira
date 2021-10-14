@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+module.export = (req, res, next) => {
   console.log("????");
   if (req.method === "POST" && req.path === "/login") {
     if (req.body.username === "kezai" && req.body.password === "123456") {
