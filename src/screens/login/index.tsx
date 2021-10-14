@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ILogin {
+export interface ILogin {
   username: string;
   password: string;
 }
@@ -8,7 +8,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 export const LoginScreen = () => {
   const login = (param: ILogin) => {
-    fetch(`${apiUrl}/login`, {
+    fetch(`${apiUrl}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export const LoginScreen = () => {
         <label htmlFor="password">密码</label>
         <input type="text" id={"password"} />
       </div>
-      <button type={"submit"}>登录</button>
+      <button type={"submit"}>注册</button>
     </form>
   );
 };
