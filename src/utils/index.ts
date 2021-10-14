@@ -1,36 +1,39 @@
 import { useEffect, useState } from "react";
-export const isFalsy = (value) => (value === 0 ? false : !value);
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
+    // @ts-ignore
     const value = result[key];
     if (isFalsy(value)) {
+      // @ts-ignore
       delete result[key];
     }
   });
   return result;
 };
 
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
   }, []);
 };
 
-export const debounce = (func, delay) => {
-  let timer;
-  return (...param) => {
+export const debounce = (func: () => void, delay?: number) => {
+  let timer: any;
+  return (...param: any) => {
     if (timer) {
       clearTimeout(timer);
     }
     timer = setTimeout(function () {
+      // @ts-ignore
       func(...param);
     }, delay);
   };
 };
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = <V>(value: V, delay?: number) => {
   const [debounceValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -40,4 +43,19 @@ export const useDebounce = (value, delay) => {
     return () => clearTimeout(timer);
   }, [value, delay]);
   return debounceValue;
+};
+
+export const useArray = <T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray);
+
+  return {
+    value,
+    setValue,
+    add: (item: T) => setValue([...value, item]),
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const _value = [...value];
+      _value.splice(index, 1);
+    },
+  };
 };
