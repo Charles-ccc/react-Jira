@@ -1,6 +1,6 @@
 //  在真实环境中，如果使用firebase这张第三方auth服务的话，本文件不需要开发
 import { User } from "screens/project-list/search-panel";
-import { ILogin } from "screens/login";
+import { ILogin } from "unauthenticated-app/login";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -14,31 +14,36 @@ export const handleUserResponse = ({ user }: { user: User }) => {
 };
 
 export const login = (data: ILogin) => {
-  fetch(`${apiUrl}/login`, {
+  return fetch(`${apiUrl}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then(async (res: Response) => {
-    if (res.ok) {
-      handleUserResponse(await res.json());
+  }).then(async (response: Response) => {
+    if (response.ok) {
+      return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(data);
     }
   });
 };
 
 export const register = (data: ILogin) => {
-  fetch(`${apiUrl}/register`, {
+  return fetch(`${apiUrl}/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then(async (res: Response) => {
-    if (res.ok) {
-      handleUserResponse(await res.json());
+  }).then(async (response: Response) => {
+    if (response.ok) {
+      return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(data);
     }
   });
 };
 
-export const logout = () => window.localStorage.removeItem(localStorgeKey);
+export const logout = async () =>
+  window.localStorage.removeItem(localStorgeKey);
