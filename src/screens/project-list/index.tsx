@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import { cleanObject, useDebounce } from "utils";
-import qs from "qs"; // 将对象转换成url的格式 ？AA=aa&BB=bb，或把url参数转为对象
-
-const apiUrl = process.env.REACT_APP_API_URL;
+import { useHttp } from "utils/http";
 
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
@@ -13,23 +11,17 @@ export const ProjectListScreen = () => {
   });
   const [users, setUsers] = useState([]);
   const [list, setList] = useState([]);
+  const client = useHttp();
   const debouncedParam = useDebounce(param, 200);
+
   useEffect(() => {
-    fetch(
-      `${apiUrl}/projects${qs.stringify(cleanObject(debouncedParam))}`
-    ).then(async (res) => {
-      if (res.ok) {
-        setList(await res.json());
-      }
-    });
+    client("projects", { data: cleanObject(debouncedParam) }).then(setList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedParam]);
 
   useEffect(() => {
-    fetch(`${apiUrl}/users`).then(async (res) => {
-      if (res.ok) {
-        setUsers(await res.json());
-      }
-    });
+    client("users").then(setUsers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const panelProps = {
