@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LoginScreen } from "./login";
 import { RegisterScreen } from "./register";
-import { Card, Divider } from "antd";
+import { Card, Divider, Button } from "antd";
 import styled from "@emotion/styled";
 import logo from "assets/logo.svg";
 import left from "assets/left.svg";
@@ -15,6 +15,7 @@ export const UnauthenticatedApp = () => {
       <Header />
       <Background />
       <ShadowCard>
+        <Title>{isRegister ? "请注册" : "请登录"}</Title>
         {isRegister ? <RegisterScreen /> : <LoginScreen />}
         <Divider />
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
@@ -25,6 +26,15 @@ export const UnauthenticatedApp = () => {
     </Container>
   );
 };
+
+export const LongButton = styled(Button)`
+  width: 100%;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 2.4rem;
+  color: rgb(94, 108, 132);
+`;
 
 const Background = styled.div`
   position: absolute;
