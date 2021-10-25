@@ -18,10 +18,12 @@ export const UnauthenticatedApp = () => {
         <Title>{isRegister ? "请注册" : "请登录"}</Title>
         {isRegister ? <RegisterScreen /> : <LoginScreen />}
         <Divider />
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <a onClick={() => setIsRegister(!isRegister)}>
-          {isRegister ? "已经有账号了？直接登录" : "没有账号？注册新账号"}
-        </a>
+        <Alabel>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a onClick={() => setIsRegister(!isRegister)}>
+            {isRegister ? "已经有账号了？直接登录" : "没有账号？注册新账号"}
+          </a>
+        </Alabel>
       </ShadowCard>
     </Container>
   );
@@ -34,6 +36,7 @@ export const LongButton = styled(Button)`
 const Title = styled.h2`
   margin-bottom: 2.4rem;
   color: rgb(94, 108, 132);
+  text-align: center;
 `;
 
 const Background = styled.div`
@@ -69,4 +72,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+`;
+
+const Alabel = styled.div`
+  text-align: center;
 `;
