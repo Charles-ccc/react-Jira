@@ -7,7 +7,7 @@ export interface ILogin {
 }
 
 export const RegisterScreen = () => {
-  const { register, user } = useAuth();
+  const { register } = useAuth();
 
   // FormEventHandler<HTMLFormElement>
   // const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {

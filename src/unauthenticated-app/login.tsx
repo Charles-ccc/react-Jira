@@ -7,7 +7,7 @@ export interface ILogin {
 }
 
 export const LoginScreen = () => {
-  const { login, user } = useAuth();
+  const { login } = useAuth();
 
   // FormEventHandler<HTMLFormElement>
   // const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -23,14 +23,12 @@ export const LoginScreen = () => {
   return (
     <Form onFinish={handleSubmit}>
       <Form.Item
-        label="用户名"
         name={"username"}
         rules={[{ required: true, message: "请输入用户名" }]}
       >
         <Input type="text" id={"username"} placeholder="用户名" />
       </Form.Item>
       <Form.Item
-        label="密码"
         name={"password"}
         rules={[{ required: true, message: "请输入密码" }]}
       >
