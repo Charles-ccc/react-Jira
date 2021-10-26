@@ -44,7 +44,6 @@ export const http = async (
 
 export const useHttp = () => {
   const { user } = useAuth();
-  console.log("user===>", user);
   // typeof 是指ts中的静态typeof
   // <typeof http> 是一个函数类型的泛型，Parameters可以读出该函数类型的参数类型
   // Utility Type：用泛型给它传入一个其他类型，然后Utility Type对这个类型进行某种操作
