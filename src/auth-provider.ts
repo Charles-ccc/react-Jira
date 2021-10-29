@@ -13,6 +13,7 @@ export const handleUserResponse = ({ user }: { user: User }) => {
   return user;
 };
 
+// 登录promise
 export const login = (data: ILogin) => {
   return fetch(`${apiUrl}/login`, {
     method: "POST",
@@ -29,6 +30,7 @@ export const login = (data: ILogin) => {
   });
 };
 
+// 注册promise
 export const register = (data: ILogin) => {
   return fetch(`${apiUrl}/register`, {
     method: "POST",
@@ -45,5 +47,6 @@ export const register = (data: ILogin) => {
   });
 };
 
+// 登出
 export const logout = async () =>
   window.localStorage.removeItem(localStorgeKey);

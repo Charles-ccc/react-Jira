@@ -4,7 +4,7 @@ import { User } from "screens/project-list/search-panel";
 import { http } from "utils/http";
 import { useAsync } from "utils/use-async";
 import { useMount } from "utils";
-import { FullPageErrorCallback, FullPageLoading } from "components/lib";
+import { FullPageErrorFallBack, FullPageLoading } from "components/lib";
 interface IAuth {
   username: string;
   password: string;
@@ -33,7 +33,6 @@ const AuthContext = React.createContext<
 AuthContext.displayName = "AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  // const [user, setUser] = useState<User | null>(null);
   const {
     data: user,
     error,
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   if (isError) {
-    return <FullPageErrorCallback error={error} />;
+    return <FullPageErrorFallBack error={error} />;
   }
 
   return (
