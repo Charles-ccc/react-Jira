@@ -1,7 +1,10 @@
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-panel";
 import { http } from "utils/http";
+import { useAsync } from "utils/use-async";
+import { useMount } from "utils";
+import { FullPageErrorCallback, FullPageLoading } from "components/lib";
 interface IAuth {
   username: string;
   password: string;
@@ -30,15 +33,32 @@ const AuthContext = React.createContext<
 AuthContext.displayName = "AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const {
+    data: user,
+    error,
+    isLoading,
+    isIdle,
+    isError,
+    run,
+    setData: setUser,
+  } = useAsync<User | null>();
   // FP point free =>   setUser === user => setUser(user)
   const login = (form: IAuth) => auth.login(form).then(setUser);
   const register = (form: IAuth) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
 
-  useEffect(() => {
-    bootstrapUser().then(setUser);
-  }, []);
+  useMount(() => {
+    run(bootstrapUser());
+  });
+
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
+
+  if (isError) {
+    return <FullPageErrorCallback error={error} />;
+  }
 
   return (
     <AuthContext.Provider
