@@ -12,26 +12,33 @@ const defaultInitailState: State<null> = {
   stat: "idle",
 };
 
-export const useAsync = <D>(initialState?: State<D>) => {
+const defaultConfig = {
+  throwOnError: false,
+};
+export const useAsync = <D>(
+  initialState?: State<D>,
+  initialConfig?: typeof defaultConfig
+) => {
+  const config = { ...defaultConfig, initialConfig };
   const [state, setState] = useState<State<D>>({
     ...defaultInitailState,
     ...initialState,
   });
 
-  const setData = (data: D) =>
+  const setData = (data: D) => {
     setState({
       data,
       stat: "success",
       error: null,
     });
-
-  const setError = (error: Error) =>
+  };
+  const setError = (error: Error) => {
     setState({
       error,
       stat: "error",
       data: null,
     });
-
+  };
   // 用来触发异步请求
   const run = (promise: Promise<D>) => {
     if (!promise || !promise.then) {
@@ -45,7 +52,11 @@ export const useAsync = <D>(initialState?: State<D>) => {
       })
       .catch((error) => {
         setError(error);
-        return error;
+        if (config.throwOnError) {
+          return Promise.reject(error);
+        }
+        // 直接return error，外部接收不到异常
+        return Promise.reject(error);
       });
   };
   return {

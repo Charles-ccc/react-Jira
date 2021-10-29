@@ -2,23 +2,25 @@ import React from "react";
 import { useAuth } from "context/auth-context";
 import { Form, Input } from "antd";
 import { LongButton } from "./index";
+import { useAsync } from "utils/use-async";
 export interface ILogin {
   username: string;
   password: string;
 }
 
-export const LoginScreen = () => {
+export const LoginScreen = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { login } = useAuth();
-
-  // FormEventHandler<HTMLFormElement>
-  // const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const username = (event.currentTarget.elements[0] as HTMLFormElement).value;
-  //   const password = (event.currentTarget.elements[1] as HTMLFormElement).value;
-  //   login({ username, password });
-  // };
-  const handleSubmit = (values: ILogin) => {
-    login(values);
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
+  const handleSubmit = async (values: ILogin) => {
+    try {
+      await run(login(values));
+    } catch (e: any) {
+      onError(e);
+    }
   };
 
   return (
@@ -36,7 +38,7 @@ export const LoginScreen = () => {
         <Input type="text" id={"password"} placeholder="密码" />
       </Form.Item>
       <Form.Item>
-        <LongButton htmlType="submit" type={"primary"}>
+        <LongButton loading={isLoading} htmlType="submit" type={"primary"}>
           登录
         </LongButton>
       </Form.Item>

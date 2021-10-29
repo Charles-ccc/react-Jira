@@ -10,6 +10,7 @@ interface IConfig extends RequestInit {
 }
 
 export const http = async (
+  // 接口名
   endpoint: string,
   { data, token, headers, ...customConfig }: IConfig = {}
 ) => {
