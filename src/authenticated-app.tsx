@@ -5,6 +5,11 @@ import styled from "@emotion/styled";
 import { Row } from "./components/lib";
 import { ReactComponent as SortwareLogo } from "./assets/software-logo.svg";
 import { Dropdown, Menu, Button } from "antd";
+import { Route, Routes, Navigate } from "react-router";
+import { BrowserRouter } from "react-router-dom";
+import { ProjectScreen } from "screens/project";
+import { resetRoute } from "utils";
+
 /**
  * grid 和 flex 的应用场景
  * 1. 要考虑一维布局（flex)还是二维布局(grid)
@@ -16,7 +21,9 @@ export const AuthenticatedApp = () => {
     <Container>
       <Header between={true}>
         <HeaderLeft gap={true}>
-          <SortwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+          <BackLogo onClick={resetRoute}>
+            <SortwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+          </BackLogo>
           <h2>项目</h2>
           <h2>用户</h2>
         </HeaderLeft>
@@ -39,11 +46,23 @@ export const AuthenticatedApp = () => {
         </HeaderRight>
       </Header>
       <Main>
-        <ProjectListScreen />
+        <BrowserRouter>
+          <Routes>
+            <Route path={"/projects"} element={<ProjectListScreen />} />
+            <Route
+              path={"/projects/:projectId/*"}
+              element={<ProjectScreen />}
+            />
+            <Navigate to={"/projects"} />
+          </Routes>
+        </BrowserRouter>
       </Main>
     </Container>
   );
 };
+const BackLogo = styled.div`
+  cursor: pointer;
+`;
 
 const Container = styled.div`
   display: grid;

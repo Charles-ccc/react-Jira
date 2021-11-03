@@ -3,7 +3,7 @@ import { User } from "./search-panel";
 import { Table } from "antd";
 import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
-
+import { Link } from "react-router-dom";
 export interface Project {
   id: string;
   name: string;
@@ -21,7 +21,12 @@ export const List = ({ users, ...props }: ListProps) => {
   const columnsData = [
     {
       title: "名称",
-      dataIndex: "name",
+      // dataIndex: 'name',
+      // @ts-ignore
+      render(value, project) {
+        // list 是在路由下渲染的，所以这里直接to id，是默认在当前路由下的子路由
+        return <Link to={String(project.id)}>{project.name}</Link>;
+      },
       // @ts-ignore
       sorter: (a, b) => a.name.localeCompare(b.name), // localeCompare排序中文字符
     },

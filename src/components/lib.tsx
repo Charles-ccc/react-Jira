@@ -37,9 +37,11 @@ export const FullPageLoading = () => (
   </FullPage>
 );
 
-export const FullPageErrorFallBack = ({ error }: { error: Error | null }) => (
-  <FullPage>
-    <DevTools />
-    <Typography.Text type="danger">{error?.message}</Typography.Text>
-  </FullPage>
-);
+export const FullPageErrorFallBack = ({ error }: { error: Error | null }) => {
+  return (
+    <FullPage>
+      <DevTools />
+      <Typography.Text type="danger">{error?.message}</Typography.Text>
+    </FullPage>
+  );
+};

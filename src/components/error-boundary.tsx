@@ -15,13 +15,14 @@ export class ErrorBoundary extends Component<IProps, IState> {
   state = {
     error: null,
   };
-  // 当子组件抛出异常，这边回接收到并调用
-  static getDerivedStateFromProps(error: Error) {
+  // 当子组件抛出异常，这边会接收到并调用
+  static getDerivedStateFromError(error: Error) {
     return { error };
   }
 
   render() {
     const { error } = this.state;
+
     const { children, fallbackRender } = this.props;
     if (error) {
       return fallbackRender({ error });

@@ -81,3 +81,7 @@ export const useDocumentTitle = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keepOnUnmount, oldTitle]);
 };
+
+export const resetRoute = () => {
+  window.location.href = window.location.origin;
+};
