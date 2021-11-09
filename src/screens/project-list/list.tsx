@@ -4,6 +4,8 @@ import { Table } from "antd";
 import { TableProps } from "antd/es/table";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { Pin } from "components/pin";
+import { useEditProject } from "utils/project";
 export interface Project {
   id: number;
   name: string;
@@ -18,10 +20,22 @@ interface ListProps extends TableProps<Project> {
 }
 
 export const List = ({ users, ...props }: ListProps) => {
+  const { mutate } = useEditProject();
+  // const pinProject = (id: number, pin: boolean) => mutate({id, pin})
+  // 柯里化方案
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
   const columnsData = [
     {
+      title: <Pin checked={true} disabled={true} />,
+      // @ts-ignore
+      render(value, project) {
+        return (
+          <Pin checked={project.pin} onCheckChange={pinProject(project.id)} />
+        ); // pin => pinProject(project.id, pin) 替换为柯里化
+      },
+    },
+    {
       title: "名称",
-      // dataIndex: 'name',
       // @ts-ignore
       render(value, project) {
         // list 是在路由下渲染的，所以这里直接to id，是默认在当前路由下的子路由
