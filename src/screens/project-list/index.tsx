@@ -11,7 +11,12 @@ import { useProjectsSearchParam } from "./util";
 export const ProjectListScreen = () => {
   useDocumentTitle("项目列表", false);
   const [param, setParam] = useProjectsSearchParam();
-  const { isLoading, error, data: list } = useProjects(useDebounce(param, 500));
+  const {
+    isLoading,
+    error,
+    data: list,
+    retry,
+  } = useProjects(useDebounce(param, 500));
   const { data: users } = useUsers();
   const panelProps = {
     param,
@@ -22,6 +27,7 @@ export const ProjectListScreen = () => {
     loading: isLoading,
     dataSource: list || [],
     users: users || [],
+    refresh: retry,
   };
   return (
     <Container>

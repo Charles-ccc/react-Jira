@@ -17,13 +17,15 @@ export interface Project {
 // extends TableProps<Project> 扩展性更好
 interface ListProps extends TableProps<Project> {
   users: User[];
+  refresh?: () => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject();
   // const pinProject = (id: number, pin: boolean) => mutate({id, pin})
   // 柯里化方案
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh);
   const columnsData = [
     {
       title: <Pin checked={true} disabled={true} />,
