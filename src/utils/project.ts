@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { cleanObject } from "utils";
 import { useAsync } from "utils/use-async";
 import { useHttp } from "utils/http";
@@ -7,14 +7,16 @@ import { Project } from "screens/project-list/list";
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
   const { run, ...result } = useAsync<Project[]>();
-  const fetchProject = () =>
-    client("projects", { data: cleanObject(param || {}) });
+  const fetchProject = useCallback(
+    () => client("projects", { data: cleanObject(param || {}) }),
+    [client, param]
+  );
+
   useEffect(() => {
     run(fetchProject(), {
       retry: fetchProject,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param]);
+  }, [param, run, fetchProject]);
 
   return result;
 };

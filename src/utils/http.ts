@@ -1,6 +1,7 @@
 import qs from "qs"; // 将对象转换成url的格式 ？AA=aa&BB=bb，或把url参数转为对象
 import * as auth from "auth-provider";
 import { useAuth } from "context/auth-context";
+import { useCallback } from "react";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -48,8 +49,11 @@ export const useHttp = () => {
   // typeof 是指ts中的静态typeof
   // <typeof http> 是一个函数类型的泛型，Parameters可以读出该函数类型的参数类型
   // Utility Type：用泛型给它传入一个其他类型，然后Utility Type对这个类型进行某种操作
-  return (...[endpoint, config]: Parameters<typeof http>) =>
-    http(endpoint, { ...config, token: user?.token });
+  return useCallback(
+    (...[endpoint, config]: Parameters<typeof http>) =>
+      http(endpoint, { ...config, token: user?.token }),
+    [user?.token]
+  );
 };
 
 /** 
