@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMountedRef } from "utils";
 
 interface State<D> {
   error: Error | null;
@@ -24,6 +25,7 @@ export const useAsync = <D>(
     ...defaultInitailState,
     ...initialState,
   });
+  const mountedRef = useMountedRef();
   // 向useState中直接传入函数的含义是执行 惰性初始化。所以如果要用useState保存函数的话，不能直接传入函数。
   const [retry, setRetry] = useState(() => () => {});
 
@@ -58,7 +60,10 @@ export const useAsync = <D>(
     setState({ ...state, stat: "loading" });
     return promise
       .then((data) => {
-        setData(data);
+        if (mountedRef.current) {
+          // 组件已经被挂载
+          setData(data);
+        }
         return data;
       })
       .catch((error) => {
