@@ -5,10 +5,13 @@ import { useDebounce, useDocumentTitle } from "utils";
 import { useUsers } from "utils/user";
 import { useProjects } from "utils/project";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import { useProjectsSearchParam } from "./util";
+import { Row } from "components/lib";
 
-export const ProjectListScreen = () => {
+export const ProjectListScreen = (props: {
+  setProjectModalOpen: (isOpen: boolean) => void;
+}) => {
   useDocumentTitle("项目列表", false);
   const [param, setParam] = useProjectsSearchParam();
   const {
@@ -28,10 +31,16 @@ export const ProjectListScreen = () => {
     dataSource: list || [],
     users: users || [],
     refresh: retry,
+    setProjectModalOpen: props.setProjectModalOpen,
   };
   return (
     <Container>
-      <h1>项目列表</h1>
+      <Row between={true}>
+        <h1>项目列表</h1>
+        <Button onClick={() => props.setProjectModalOpen(true)}>
+          创建项目
+        </Button>
+      </Row>
       <SearchPanel {...panelProps} />
       {error ? (
         <Typography.Text type="danger">{error.message}</Typography.Text>

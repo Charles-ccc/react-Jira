@@ -1,4 +1,5 @@
 // 登录状态的app
+import { useState } from "react";
 import { ProjectListScreen } from "screens/project-list";
 import { useAuth } from "context/auth-context";
 import styled from "@emotion/styled";
@@ -9,6 +10,8 @@ import { Route, Routes, Navigate } from "react-router";
 import { BrowserRouter } from "react-router-dom";
 import { ProjectScreen } from "screens/project";
 import { resetRoute } from "utils";
+import { ProjectModal } from "screens/project-list/project-modal";
+import { ProjectPopover } from "components/project-popover";
 
 /**
  * grid 和 flex 的应用场景
@@ -16,39 +19,19 @@ import { resetRoute } from "utils";
  * 2. 是从内容出发（flex）还是布局出发（grid）
  */
 export const AuthenticatedApp = () => {
-  const { logout, user } = useAuth();
+  const [projectModelOpen, setProjectModalOpen] = useState<boolean>(false);
   return (
     <Container>
-      <Header between={true}>
-        <HeaderLeft gap={true}>
-          <BackLogo onClick={resetRoute}>
-            <SortwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
-          </BackLogo>
-          <h2>项目</h2>
-          <h2>用户</h2>
-        </HeaderLeft>
-        <HeaderRight>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item key="logout">
-                  <Button type={"link"} onClick={logout}>
-                    登出
-                  </Button>
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <Button type="link" onClick={(e) => e.preventDefault()}>
-              Hi, {user?.name}
-            </Button>
-          </Dropdown>
-        </HeaderRight>
-      </Header>
+      <PageHeader setProjectModalOpen={setProjectModalOpen} />
       <Main>
         <BrowserRouter>
           <Routes>
-            <Route path={"/projects"} element={<ProjectListScreen />} />
+            <Route
+              path={"/projects"}
+              element={
+                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
+              }
+            />
             <Route
               path={"/projects/:projectId/*"}
               element={<ProjectScreen />}
@@ -57,9 +40,53 @@ export const AuthenticatedApp = () => {
           </Routes>
         </BrowserRouter>
       </Main>
+      <ProjectModal
+        projectModalOpen={projectModelOpen}
+        onClose={() => setProjectModalOpen(false)}
+      />
     </Container>
   );
 };
+
+const PageHeader = (props: {
+  setProjectModalOpen: (isOpen: boolean) => void;
+}) => {
+  return (
+    <Header between={true}>
+      <HeaderLeft gap={true}>
+        <BackLogo onClick={resetRoute}>
+          <SortwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+        </BackLogo>
+        <ProjectPopover setProjectModalOpen={props.setProjectModalOpen} />
+        <span>用户</span>
+      </HeaderLeft>
+      <HeaderRight>
+        <User />
+      </HeaderRight>
+    </Header>
+  );
+};
+const User = () => {
+  const { logout, user } = useAuth();
+  return (
+    <Dropdown
+      overlay={
+        <Menu>
+          <Menu.Item key="logout">
+            <Button type={"link"} onClick={logout}>
+              登出
+            </Button>
+          </Menu.Item>
+        </Menu>
+      }
+    >
+      <Button type="link" onClick={(e) => e.preventDefault()}>
+        Hi, {user?.name}
+      </Button>
+    </Dropdown>
+  );
+};
+
 const BackLogo = styled.div`
   cursor: pointer;
 `;
