@@ -9,9 +9,7 @@ import { Button, Typography } from "antd";
 import { useProjectsSearchParam } from "./util";
 import { Row } from "components/lib";
 
-export const ProjectListScreen = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
   useDocumentTitle("项目列表", false);
   const [param, setParam] = useProjectsSearchParam();
   const {
@@ -31,15 +29,13 @@ export const ProjectListScreen = (props: {
     dataSource: list || [],
     users: users || [],
     refresh: retry,
-    setProjectModalOpen: props.setProjectModalOpen,
+    projectButton: props.projectButton,
   };
   return (
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>
-          创建项目
-        </Button>
+        {props.projectButton}
       </Row>
       <SearchPanel {...panelProps} />
       {error ? (

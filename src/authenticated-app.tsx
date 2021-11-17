@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ProjectListScreen } from "screens/project-list";
 import { useAuth } from "context/auth-context";
 import styled from "@emotion/styled";
-import { Row } from "./components/lib";
+import { ButtonNoPadding, Row } from "./components/lib";
 import { ReactComponent as SortwareLogo } from "./assets/software-logo.svg";
 import { Dropdown, Menu, Button } from "antd";
 import { Route, Routes, Navigate } from "react-router";
@@ -22,14 +22,32 @@ export const AuthenticatedApp = () => {
   const [projectModelOpen, setProjectModalOpen] = useState<boolean>(false);
   return (
     <Container>
-      <PageHeader setProjectModalOpen={setProjectModalOpen} />
+      <PageHeader
+        projectButton={
+          <ButtonNoPadding
+            type={"link"}
+            onClick={() => setProjectModalOpen(true)}
+          >
+            创建项目
+          </ButtonNoPadding>
+        }
+      />
       <Main>
         <BrowserRouter>
           <Routes>
             <Route
               path={"/projects"}
               element={
-                <ProjectListScreen setProjectModalOpen={setProjectModalOpen} />
+                <ProjectListScreen
+                  projectButton={
+                    <ButtonNoPadding
+                      type={"link"}
+                      onClick={() => setProjectModalOpen(true)}
+                    >
+                      创建项目
+                    </ButtonNoPadding>
+                  }
+                />
               }
             />
             <Route
@@ -48,16 +66,14 @@ export const AuthenticatedApp = () => {
   );
 };
 
-const PageHeader = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+const PageHeader = (props: { projectButton: JSX.Element }) => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
         <BackLogo onClick={resetRoute}>
           <SortwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
         </BackLogo>
-        <ProjectPopover setProjectModalOpen={props.setProjectModalOpen} />
+        <ProjectPopover {...props} />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
