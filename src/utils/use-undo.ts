@@ -36,7 +36,6 @@ const undoReducer = <T>(state: State<T>, action: Action<T>) => {
       if (future.length === 0) return state;
       const next = future[0];
       const newFuture = future.slice(1);
-
       return {
         past: [...past, present],
         present: next,
@@ -46,7 +45,6 @@ const undoReducer = <T>(state: State<T>, action: Action<T>) => {
 
     case SET: {
       if (newPresent === present) return state;
-
       return {
         past: [...past, present],
         present: newPresent,
@@ -75,18 +73,14 @@ export const useUndo = <T>(initialPresent: T) => {
   const canRedo = state.future.length !== 0;
 
   const undo = useCallback(() => dispatch({ type: UNDO }), []);
-
   const redo = useCallback(() => dispatch({ type: REDO }), []);
-
   const set = useCallback(
     (newPresent: T) => dispatch({ type: SET, newPresent }),
     []
   );
-
   const reset = useCallback(
     (newPresent: T) => dispatch({ type: SET, newPresent }),
     []
   );
-
   return [state, { set, reset, undo, redo, canUndo, canRedo }] as const;
 };

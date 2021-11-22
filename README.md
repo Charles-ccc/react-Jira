@@ -8,3 +8,5 @@ react hooks
 向 useState 中直接传入函数的含义是执行 惰性初始化。所以如果要用 useState 保存函数的话，不能直接传入函数。
 
 component composition
+
+自定义 hooks 返回方法的时候，需要使用 useCallback 包裹
