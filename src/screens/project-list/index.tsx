@@ -5,11 +5,11 @@ import { useDebounce, useDocumentTitle } from "utils";
 import { useUsers } from "utils/user";
 import { useProjects } from "utils/project";
 import styled from "@emotion/styled";
-import { Button, Typography } from "antd";
-import { useProjectsSearchParam } from "./util";
-import { Row } from "components/lib";
+import { Typography } from "antd";
+import { useProjectModal, useProjectsSearchParam } from "./util";
+import { ButtonNoPadding, Row } from "components/lib";
 
-export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
+export const ProjectListScreen = () => {
   useDocumentTitle("项目列表", false);
   const [param, setParam] = useProjectsSearchParam();
   const {
@@ -19,6 +19,7 @@ export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
     retry,
   } = useProjects(useDebounce(param, 500));
   const { data: users } = useUsers();
+  const { open } = useProjectModal();
   const panelProps = {
     param,
     setParam,
@@ -29,13 +30,14 @@ export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
     dataSource: list || [],
     users: users || [],
     refresh: retry,
-    projectButton: props.projectButton,
   };
   return (
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        {props.projectButton}
+        <ButtonNoPadding onClick={open} type={"link"}>
+          创建项目
+        </ButtonNoPadding>
       </Row>
       <SearchPanel {...panelProps} />
       {error ? (

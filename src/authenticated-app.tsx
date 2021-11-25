@@ -1,9 +1,8 @@
 // 登录状态的app
-import { useState } from "react";
 import { ProjectListScreen } from "screens/project-list";
 import { useAuth } from "context/auth-context";
 import styled from "@emotion/styled";
-import { ButtonNoPadding, Row } from "./components/lib";
+import { Row } from "./components/lib";
 import { ReactComponent as SortwareLogo } from "./assets/software-logo.svg";
 import { Dropdown, Menu, Button } from "antd";
 import { Route, Routes, Navigate } from "react-router";
@@ -19,61 +18,34 @@ import { ProjectPopover } from "components/project-popover";
  * 2. 是从内容出发（flex）还是布局出发（grid）
  */
 export const AuthenticatedApp = () => {
-  const [projectModelOpen, setProjectModalOpen] = useState<boolean>(false);
   return (
     <Container>
-      <PageHeader
-        projectButton={
-          <ButtonNoPadding
-            type={"link"}
-            onClick={() => setProjectModalOpen(true)}
-          >
-            创建项目
-          </ButtonNoPadding>
-        }
-      />
-      <Main>
-        <BrowserRouter>
+      <BrowserRouter>
+        <PageHeader />
+        <Main>
           <Routes>
-            <Route
-              path={"/projects"}
-              element={
-                <ProjectListScreen
-                  projectButton={
-                    <ButtonNoPadding
-                      type={"link"}
-                      onClick={() => setProjectModalOpen(true)}
-                    >
-                      创建项目
-                    </ButtonNoPadding>
-                  }
-                />
-              }
-            />
+            <Route path={"/projects"} element={<ProjectListScreen />} />
             <Route
               path={"/projects/:projectId/*"}
               element={<ProjectScreen />}
             />
             <Navigate to={"/projects"} />
           </Routes>
-        </BrowserRouter>
-      </Main>
-      <ProjectModal
-        projectModalOpen={projectModelOpen}
-        onClose={() => setProjectModalOpen(false)}
-      />
+        </Main>
+        <ProjectModal />
+      </BrowserRouter>
     </Container>
   );
 };
 
-const PageHeader = (props: { projectButton: JSX.Element }) => {
+const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
         <BackLogo onClick={resetRoute}>
           <SortwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
         </BackLogo>
-        <ProjectPopover {...props} />
+        <ProjectPopover />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
